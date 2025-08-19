@@ -1,11 +1,245 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gelatos Avelãs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #8B4513;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #A0522D;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .gelatos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .gelato-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .gelato-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .gelato-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .gelato-name {
+            color: #8B4513;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .gelato-description {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .gelato-price {
+            color: #D2691E;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .api-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .loading {
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-    <!-- Pensem num site de sorvete, com uma base de dados via api que vai carregar o conteudo -->
+    <div class="container">
+        <header>
+            <h1>🍦 Gelatos Avelãs 🍦</h1>
+            <p class="subtitle">Os melhores sorvetes artesanais da cidade!</p>
+        </header>
+
+        <div class="gelatos-grid" id="gelatosGrid">
+            <!-- Gelatos serão carregados aqui via JavaScript -->
+        </div>
+
+        <div class="api-section">
+            <h2>🔄 Carregar Novos Sabores</h2>
+            <p>Clique no botão abaixo para carregar novos sabores da nossa API!</p>
+            <br>
+            <button onclick="carregarGelatos()">Carregar Gelatos</button>
+            <p class="loading" id="loading">Carregando deliciosos gelatos...</p>
+        </div>
+    </div>
+
+    <script>
+        // Dados simulados da API
+        const gelatosData = [
+            {
+                id: 1,
+                nome: "Gelato de Avelã",
+                descricao: "Cremoso gelato feito com avelãs selecionadas",
+                preco: "R$ 12,90",
+                icon: "🌰"
+            },
+            {
+                id: 2,
+                nome: "Chocolate Belga",
+                descricao: "Intenso sabor de chocolate belga premium",
+                preco: "R$ 14,90",
+                icon: "🍫"
+            },
+            {
+                id: 3,
+                nome: "Morango Fresco",
+                descricao: "Gelato com morangos frescos da estação",
+                preco: "R$ 11,90",
+                icon: "🍓"
+            },
+            {
+                id: 4,
+                nome: "Pistache Siciliano",
+                descricao: "Autêntico gelato de pistache da Sicília",
+                preco: "R$ 16,90",
+                icon: "🥜"
+            },
+            {
+                id: 5,
+                nome: "Limão Siciliano",
+                descricao: "Refrescante gelato cítrico",
+                preco: "R$ 10,90",
+                icon: "🍋"
+            },
+            {
+                id: 6,
+                nome: "Baunilha Bourbon",
+                descricao: "Clássico gelato de baunilha premium",
+                preco: "R$ 13,90",
+                icon: "🌸"
+            }
+        ];
+
+        function renderizarGelatos(gelatos) {
+            const grid = document.getElementById('gelatosGrid');
+            grid.innerHTML = '';
+            
+            gelatos.forEach(gelato => {
+                const card = document.createElement('div');
+                card.className = 'gelato-card';
+                card.innerHTML = `
+                    <div class="gelato-icon">${gelato.icon}</div>
+                    <h3 class="gelato-name">${gelato.nome}</h3>
+                    <p class="gelato-description">${gelato.descricao}</p>
+                    <p class="gelato-price">${gelato.preco}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function carregarGelatos() {
+            const loading = document.getElementById('loading');
+            loading.style.display = 'block';
+            
+            // Simula uma chamada de API com delay
+            setTimeout(() => {
+                // Embaralha os gelatos para simular novos dados da API
+                const gelatosEmbaralhados = [...gelatosData].sort(() => Math.random() - 0.5);
+                renderizarGelatos(gelatosEmbaralhados);
+                loading.style.display = 'none';
+            }, 1500);
+        }
+
+        // Carrega gelatos iniciais quando a página é carregada
+        window.addEventListener('load', () => {
+            carregarGelatos();
+        });
+
+        // Adiciona animação suave aos cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const style = document.createElement('style');
+            style.textContent = `
+                .gelato-card {
+                    opacity: 0;
+                    animation: fadeInUp 0.6s ease forwards;
+                }
+                
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </body>
 </html>
