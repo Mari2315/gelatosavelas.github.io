@@ -1,199 +1,173 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dragãozinho Shop</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to top, #a0d8ef, #ffffff); /* céu azul suave */
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            color: #ff7f50;
-            font-size: 3em;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #555;
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
-
-        .gelatos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .gelato-card {
-            background: #fff7f0;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .gelato-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-
-        .gelato-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-
-        .gelato-name {
-            color: #ff7f50;
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
-
-        .gelato-description {
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .gelato-price {
-            color: #20b2aa;
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        .api-section {
-            background: #fff7f0;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        button {
-            background: linear-gradient(135deg, #ff7f50, #ffb347);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        .loading {
-            display: none;
-            color: #555;
-            font-style: italic;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fúrias da Noite Shop</title>
+<style>
+/* Reset e base */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Arial',sans-serif;background:#0b0c10;color:#e0e0e0;min-height:100vh;scroll-behavior:smooth;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+header{position:fixed;width:100%;top:0;left:0;display:flex;justify-content:space-between;align-items:center;padding:20px 50px;background:rgba(31,34,43,0.95);backdrop-filter:blur(10px);box-shadow:0 0 15px rgba(160,196,255,0.3);z-index:1000;}
+header h1{font-size:2em;color:#f5f5f5;text-shadow:0 0 15px #a0c4ff;}
+nav a{margin-left:20px;font-weight:bold;transition:0.3s;}
+nav a:hover{color:#a0c4ff;}
+section{padding:120px 50px 80px;position:relative;z-index:2;}
+/* Fundo animado */
+#backgroundCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+/* Hero */
+.hero{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+.hero-text{max-width:600px;}
+.hero-text h2{font-size:2.5em;color:#f5f5f5;text-shadow:0 0 15px #a0c4ff;margin-bottom:20px;}
+.hero-text p{color:#cfd8dc;margin-bottom:30px;font-size:1.2em;line-height:1.4;}
+.hero-text button{background:linear-gradient(135deg,#3a86ff,#8338ec);color:#fff;border:none;padding:12px 30px;border-radius:25px;cursor:pointer;transition:0.3s;box-shadow:0 4px 15px rgba(58,134,255,0.4);}
+.hero-text button:hover{transform:scale(1.05);box-shadow:0 6px 25px rgba(58,134,255,0.6);}
+.hero-image img{width:400px;max-width:100%;border-radius:15px;box-shadow:0 0 25px rgba(160,196,255,0.6);}
+/* Produtos */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
+.product-card{background:#1f222b;border-radius:15px;overflow:hidden;box-shadow:0 0 20px rgba(160,196,255,0.3);transition:transform 0.3s ease,box-shadow 0.3s ease;opacity:0;animation:fadeInUp 0.6s forwards;}
+.product-card:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 0 35px rgba(160,196,255,0.6);}
+.product-image{width:100%;height:200px;object-fit:cover;}
+.product-info{padding:20px;text-align:center;}
+.product-name{font-size:1.4em;font-weight:bold;margin-bottom:10px;color:#ffffff;}
+.product-description{font-size:1em;margin-bottom:15px;color:#cfd8dc;}
+.product-price{font-size:1.2em;font-weight:bold;color:#a0c4ff;}
+/* Perfil */
+.profile-card, .about-section{background:#1f222b;padding:30px;border-radius:15px;box-shadow:0 0 20px rgba(160,196,255,0.3);margin-bottom:50px;}
+.profile-card h2,.about-section h2{color:#f5f5f5;margin-bottom:15px;}
+.profile-info p, .about-section p{color:#cfd8dc;margin-bottom:10px;line-height:1.6;}
+.history ul{list-style:none;}
+.history ul li{background:#292b35;padding:10px;margin-bottom:10px;border-radius:10px;box-shadow:0 0 10px rgba(160,196,255,0.2);}
+.team{display:flex;flex-wrap:wrap;justify-content:center;margin-top:20px;}
+.team img{width:150px;border-radius:10px;margin:10px;box-shadow:0 0 20px rgba(160,196,255,0.4);}
+footer{background:#1f222b;text-align:center;padding:20px;color:#cfd8dc;box-shadow:0 -5px 15px rgba(160,196,255,0.2);}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0);}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🐉 Dragãozinho Shop 🐉</h1>
-            <p class="subtitle">Tudo fofo e mágico para seus estudos e aventuras!</p>
-        </header>
 
-        <div class="gelatos-grid" id="gelatosGrid">
-            <!-- Produtos serão carregados aqui via JavaScript -->
-        </div>
+<canvas id="backgroundCanvas"></canvas>
 
-        <div class="api-section">
-            <h2>🔄 Descubra Novos Itens</h2>
-            <p>Clique no botão abaixo para carregar itens fofos da nossa loja!</p>
-            <br>
-            <button onclick="carregarGelatos()">Carregar Itens</button>
-            <p class="loading" id="loading">Carregando fofuras...</p>
-        </div>
-    </div>
+<header>
+<h1>Fúrias da Noite Shop</h1>
+<nav>
+    <a href="#home">Home</a>
+    <a href="#produtos">Produtos</a>
+    <a href="#perfil">Perfil</a>
+    <a href="#sobre">Sobre</a>
+</nav>
+</header>
 
-    <script>
-        const gelatosData = [
-            { id: 1, nome: "Caderno de Dragãozinho", descricao: "Caderno super fofo com capas de dragão", preco: "R$ 19,90", icon: "📒" },
-            { id: 2, nome: "Estojo Flamejante", descricao: "Estojo com cores vibrantes e dragões", preco: "R$ 29,90", icon: "✏️" },
-            { id: 3, nome: "Caneta Voadora", descricao: "Caneta com glitter que parece voar", preco: "R$ 12,90", icon: "🖊️" },
-            { id: 4, nome: "Lápis de Escamas", descricao: "Lápis decorado com escamas de dragão", preco: "R$ 8,90", icon: "✏️" },
-            { id: 5, nome: "Mochila da Aventura", descricao: "Mochila para explorar a escola com estilo", preco: "R$ 59,90", icon: "🎒" },
-            { id: 6, nome: "Borrachinha Fofa", descricao: "Borracha mágica com formato de dragão", preco: "R$ 5,90", icon: "🟠" }
-        ];
+<!-- Landing Page -->
+<section id="home" class="hero">
+<div class="hero-text">
+    <h2>Materiais Escolares & Itens Mágicos</h2>
+    <p>Descubra produtos fofos e inspirados no mundo dos dragões. Preparado para aventuras escolares?</p>
+    <button onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">Ver Produtos</button>
+</div>
+<div class="hero-image">
+    <img src="https://i.imgur.com/qIu1GzM.jpg" alt="Dragão">
+</div>
+</section>
 
-        function renderizarGelatos(gelatos) {
-            const grid = document.getElementById('gelatosGrid');
-            grid.innerHTML = '';
-            
-            gelatos.forEach(gelato => {
-                const card = document.createElement('div');
-                card.className = 'gelato-card';
-                card.innerHTML = `
-                    <div class="gelato-icon">${gelato.icon}</div>
-                    <h3 class="gelato-name">${gelato.nome}</h3>
-                    <p class="gelato-description">${gelato.descricao}</p>
-                    <p class="gelato-price">${gelato.preco}</p>
-                `;
-                grid.appendChild(card);
-            });
-        }
+<!-- Produtos -->
+<section id="produtos" class="products-grid"></section>
 
-        function carregarGelatos() {
-            const loading = document.getElementById('loading');
-            loading.style.display = 'block';
-            
-            setTimeout(() => {
-                const gelatosEmbaralhados = [...gelatosData].sort(() => Math.random() - 0.5);
-                renderizarGelatos(gelatosEmbaralhados);
-                loading.style.display = 'none';
-            }, 1000);
-        }
+<!-- Perfil do Usuário -->
+<section id="perfil">
+<div class="profile-card">
+<h2>Maria Helena</h2>
+<div class="profile-info">
+    <p>Email: maria@noite.com</p>
+    <p>Data de cadastro: 01/01/2025</p>
+    <p>Status: Usuário Ativo</p>
+</div>
+<div class="history">
+    <h3>Histórico de Compras</h3>
+    <ul>
+        <li>Caderno Dragão Noturno - R$ 22,90</li>
+        <li>Estojo da Aventura - R$ 29,90</li>
+        <li>Mochila Veloz - R$ 59,90</li>
+    </ul>
+</div>
+</div>
+</section>
 
-        window.addEventListener('load', () => {
-            carregarGelatos();
-        });
+<!-- Sobre a Empresa -->
+<section id="sobre">
+<div class="about-section">
+<h2>Sobre Nós</h2>
+<p>A Fúrias da Noite Shop nasceu do amor por dragões e pela magia da imaginação. Nossa missão é trazer produtos escolares e itens fofos inspirados no mundo dos dragões para tornar cada dia mais especial e divertido.</p>
+<p>Com materiais de alta qualidade e designs exclusivos, queremos que nossos clientes vivam aventuras incríveis e colecionem momentos mágicos em cada compra.</p>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const style = document.createElement('style');
-            style.textContent = `
-                .gelato-card {
-                    opacity: 0;
-                    animation: fadeInUp 0.6s ease forwards;
-                }
-                
-                @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-            `;
-            document.head.appendChild(style);
-        });
-    </script>
+<h2>Nossa Equipe</h2>
+<div class="team">
+    <img src="https://i.imgur.com/qIu1GzM.jpg" alt="Equipe Dragão 1">
+    <img src="https://i.imgur.com/2T2q8Dj.jpg" alt="Equipe Dragão 2">
+    <img src="https://i.imgur.com/7tG0fJQ.jpg" alt="Equipe Dragão 3">
+</div>
+</div>
+</section>
+
+<footer>
+&copy; 2025 Fúrias da Noite Shop
+</footer>
+
+<script>
+// Produtos
+const produtosData = [
+{ id:1,nome:"Caderno Dragão Noturno",descricao:"Caderno com capa ilustrada de dragão sob a lua",preco:"R$ 22,90",img:"https://i.imgur.com/qIu1GzM.jpg" },
+{ id:2,nome:"Estojo da Aventura",descricao:"Estojo resistente com temática de dragões voando",preco:"R$ 29,90",img:"https://i.imgur.com/2T2q8Dj.jpg" },
+{ id:3,nome:"Mochila Veloz",descricao:"Mochila com compartimentos mágicos e design de dragão",preco:"R$ 59,90",img:"https://i.imgur.com/7tG0fJQ.jpg" },
+{ id:4,nome:"Canetas da Lua",descricao:"Conjunto de canetas com detalhes brilhantes",preco:"R$ 14,90",img:"https://i.imgur.com/2s9zQqJ.jpg" },
+{ id:5,nome:"Borrachas Escama de Dragão",descricao:"Borracha com design de escamas de dragão",preco:"R$ 6,90",img:"https://i.imgur.com/8JYrH9U.jpg" },
+{ id:6,nome:"Lápis Mágico",descricao:"Lápis de cor com tonalidades de dragão noturno",preco:"R$ 9,90",img:"https://i.imgur.com/1eXnT5k.jpg" }
+];
+
+function renderizarProdutos(produtos){
+    const grid=document.getElementById('produtos');
+    produtos.forEach((produto,i)=>{
+        const card=document.createElement('div');
+        card.className='product-card';
+        card.style.animationDelay=`${i*0.1}s`;
+        card.innerHTML=`
+        <img class="product-image" src="${produto.img}" alt="${produto.nome}">
+        <div class="product-info">
+            <h3 class="product-name">${produto.nome}</h3>
+            <p class="product-description">${produto.descricao}</p>
+            <p class="product-price">${produto.preco}</p>
+        </div>`;
+        grid.appendChild(card);
+    });
+}
+
+window.addEventListener('load',()=>{renderizarProdutos(produtosData);});
+
+// Fundo animado: partículas brilhantes (lua/estrelas)
+const canvas=document.getElementById('backgroundCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+let stars=[];
+for(let i=0;i<200;i++){
+    stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*1.5+0.5,dx:(Math.random()-0.5)/2,dy:(Math.random()-0.5)/2});
+}
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.radius,0,Math.PI*2);
+        ctx.fillStyle='rgba(160,196,255,0.7)';
+        ctx.fill();
+        s.x+=s.dx; s.y+=s.dy;
+        if(s.x<0)s.x=canvas.width;if(s.x>canvas.width)s.x=0;
+        if(s.y<0)s.y=canvas.height;if(s.y>canvas.height)s.y=0;
+    });
+    requestAnimationFrame(animate);
+}
+animate();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
 </body>
 </html>
