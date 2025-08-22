@@ -7,25 +7,38 @@
 <style>
 /* Reset e base */
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Arial',sans-serif;background:#0b0c10;color:#e0e0e0;min-height:100vh;scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:'Arial',sans-serif;background:#0b0c10;color:#e0e0e0;min-height:100vh;overflow-x:hidden;scroll-behavior:smooth;}
 a{text-decoration:none;color:inherit;}
+
+/* Header */
 header{position:fixed;width:100%;top:0;left:0;display:flex;justify-content:space-between;align-items:center;padding:20px 50px;background:rgba(31,34,43,0.95);backdrop-filter:blur(10px);box-shadow:0 0 15px rgba(160,196,255,0.3);z-index:1000;}
 header h1{font-size:2em;color:#f5f5f5;text-shadow:0 0 15px #a0c4ff;}
-nav a{margin-left:20px;font-weight:bold;transition:0.3s;}
+nav a{margin-left:20px;font-weight:bold;cursor:pointer;transition:0.3s;}
 nav a:hover{color:#a0c4ff;}
-section{padding:120px 50px 80px;position:relative;z-index:2;}
+
 /* Fundo animado */
 #backgroundCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
-/* Hero */
-.hero{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;}
-.hero-text{max-width:600px;}
-.hero-text h2{font-size:2.5em;color:#f5f5f5;text-shadow:0 0 15px #a0c4ff;margin-bottom:20px;}
-.hero-text p{color:#cfd8dc;margin-bottom:30px;font-size:1.2em;line-height:1.4;}
-.hero-text button{background:linear-gradient(135deg,#3a86ff,#8338ec);color:#fff;border:none;padding:12px 30px;border-radius:25px;cursor:pointer;transition:0.3s;box-shadow:0 4px 15px rgba(58,134,255,0.4);}
-.hero-text button:hover{transform:scale(1.05);box-shadow:0 6px 25px rgba(58,134,255,0.6);}
-.hero-image img{width:400px;max-width:100%;border-radius:15px;box-shadow:0 0 25px rgba(160,196,255,0.6);}
+
+/* Seções */
+section{padding:120px 50px 80px;display:none;position:relative;z-index:2;}
+section.active{display:block;animation:fadeIn 0.6s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* Landing Page Impactante */
+#home .landing-title{
+    display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;text-align:center;
+}
+#home .landing-title h2{
+    font-size:6vw;color:#f5f5f5;text-shadow:0 0 30px #a0c4ff;line-height:1.2;
+    margin-bottom:30px;
+}
+#home .landing-title button{
+    background:linear-gradient(135deg,#3a86ff,#8338ec);color:#fff;border:none;padding:20px 40px;border-radius:25px;cursor:pointer;transition:0.3s;box-shadow:0 4px 20px rgba(58,134,255,0.4);font-size:1.2em;
+}
+#home .landing-title button:hover{transform:scale(1.05);box-shadow:0 6px 25px rgba(58,134,255,0.6);}
+
 /* Produtos */
-.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;margin-top:30px;}
 .product-card{background:#1f222b;border-radius:15px;overflow:hidden;box-shadow:0 0 20px rgba(160,196,255,0.3);transition:transform 0.3s ease,box-shadow 0.3s ease;opacity:0;animation:fadeInUp 0.6s forwards;}
 .product-card:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 0 35px rgba(160,196,255,0.6);}
 .product-image{width:100%;height:200px;object-fit:cover;}
@@ -33,7 +46,8 @@ section{padding:120px 50px 80px;position:relative;z-index:2;}
 .product-name{font-size:1.4em;font-weight:bold;margin-bottom:10px;color:#ffffff;}
 .product-description{font-size:1em;margin-bottom:15px;color:#cfd8dc;}
 .product-price{font-size:1.2em;font-weight:bold;color:#a0c4ff;}
-/* Perfil */
+
+/* Perfil e Sobre */
 .profile-card, .about-section{background:#1f222b;padding:30px;border-radius:15px;box-shadow:0 0 20px rgba(160,196,255,0.3);margin-bottom:50px;}
 .profile-card h2,.about-section h2{color:#f5f5f5;margin-bottom:15px;}
 .profile-info p, .about-section p{color:#cfd8dc;margin-bottom:10px;line-height:1.6;}
@@ -41,7 +55,11 @@ section{padding:120px 50px 80px;position:relative;z-index:2;}
 .history ul li{background:#292b35;padding:10px;margin-bottom:10px;border-radius:10px;box-shadow:0 0 10px rgba(160,196,255,0.2);}
 .team{display:flex;flex-wrap:wrap;justify-content:center;margin-top:20px;}
 .team img{width:150px;border-radius:10px;margin:10px;box-shadow:0 0 20px rgba(160,196,255,0.4);}
+
+/* Footer */
 footer{background:#1f222b;text-align:center;padding:20px;color:#cfd8dc;box-shadow:0 -5px 15px rgba(160,196,255,0.2);}
+
+/* Animations */
 @keyframes fadeInUp{to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
@@ -50,31 +68,30 @@ footer{background:#1f222b;text-align:center;padding:20px;color:#cfd8dc;box-shado
 <canvas id="backgroundCanvas"></canvas>
 
 <header>
-<h1>Fúrias da Noite Shop</h1>
+<h1>Fúrias da Noite</h1>
 <nav>
-    <a href="#home">Home</a>
-    <a href="#produtos">Produtos</a>
-    <a href="#perfil">Perfil</a>
-    <a href="#sobre">Sobre</a>
+    <a onclick="showSection('home')">Home</a>
+    <a onclick="showSection('produtos')">Produtos</a>
+    <a onclick="showSection('perfil')">Perfil</a>
+    <a onclick="showSection('sobre')">Sobre</a>
 </nav>
 </header>
 
 <!-- Landing Page -->
-<section id="home" class="hero">
-<div class="hero-text">
-    <h2>Materiais Escolares & Itens Mágicos</h2>
-    <p>Descubra produtos fofos e inspirados no mundo dos dragões. Preparado para aventuras escolares?</p>
-    <button onclick="document.getElementById('produtos').scrollIntoView({behavior:'smooth'})">Ver Produtos</button>
-</div>
-<div class="hero-image">
-    <img src="https://i.imgur.com/qIu1GzM.jpg" alt="Dragão">
+<section id="home" class="active">
+<div class="landing-title">
+    <h2>FÚRIAS DA NOITE</h2>
+    <button onclick="showSection('produtos')">Ver Produtos</button>
 </div>
 </section>
 
 <!-- Produtos -->
-<section id="produtos" class="products-grid"></section>
+<section id="produtos">
+<h2>Produtos</h2>
+<div class="products-grid"></div>
+</section>
 
-<!-- Perfil do Usuário -->
+<!-- Perfil -->
 <section id="perfil">
 <div class="profile-card">
 <h2>Maria Helena</h2>
@@ -94,7 +111,7 @@ footer{background:#1f222b;text-align:center;padding:20px;color:#cfd8dc;box-shado
 </div>
 </section>
 
-<!-- Sobre a Empresa -->
+<!-- Sobre -->
 <section id="sobre">
 <div class="about-section">
 <h2>Sobre Nós</h2>
@@ -115,6 +132,12 @@ footer{background:#1f222b;text-align:center;padding:20px;color:#cfd8dc;box-shado
 </footer>
 
 <script>
+// Função de tabs
+function showSection(id){
+    document.querySelectorAll('section').forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
 // Produtos
 const produtosData = [
 { id:1,nome:"Caderno Dragão Noturno",descricao:"Caderno com capa ilustrada de dragão sob a lua",preco:"R$ 22,90",img:"https://i.imgur.com/qIu1GzM.jpg" },
@@ -126,7 +149,8 @@ const produtosData = [
 ];
 
 function renderizarProdutos(produtos){
-    const grid=document.getElementById('produtos');
+    const grid=document.querySelector('.products-grid');
+    grid.innerHTML='';
     produtos.forEach((produto,i)=>{
         const card=document.createElement('div');
         card.className='product-card';
