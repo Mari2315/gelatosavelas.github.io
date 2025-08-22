@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fúrias da Noite</title>
+    <title>Dragãozinho Shop</title>
     <style>
         * {
             margin: 0;
@@ -13,9 +13,9 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0b0c10, #1f2833 80%);
+            background: linear-gradient(to top, #a0d8ef, #ffffff); /* céu azul suave */
             min-height: 100vh;
-            color: #eee;
+            color: #333;
         }
 
         .container {
@@ -30,75 +30,71 @@
         }
 
         h1 {
-            color: #ff2e63;
+            color: #ff7f50;
             font-size: 3em;
-            text-shadow: 0 0 10px #ff2e63, 0 0 20px #ff2e63;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
             margin-bottom: 10px;
         }
 
         .subtitle {
-            color: #ffffffaa;
+            color: #555;
             font-size: 1.2em;
             margin-bottom: 30px;
-            text-shadow: 0 0 5px #fff;
         }
 
         .gelatos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
 
         .gelato-card {
-            background: #1c1f26;
+            background: #fff7f0;
             border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(255,46,99,0.3), 0 0 15px rgba(0,0,0,0.5);
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .gelato-card:hover {
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(255,46,99,0.6), 0 0 20px rgba(0,0,0,0.7);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
 
         .gelato-icon {
             font-size: 3em;
             margin-bottom: 15px;
-            text-shadow: 0 0 8px #ff2e63;
         }
 
         .gelato-name {
-            color: #ff2e63;
+            color: #ff7f50;
             font-size: 1.5em;
             margin-bottom: 10px;
-            text-shadow: 0 0 5px #ff2e63;
         }
 
         .gelato-description {
-            color: #ccc;
+            color: #666;
             margin-bottom: 15px;
         }
 
         .gelato-price {
-            color: #ffa500;
+            color: #20b2aa;
             font-size: 1.3em;
             font-weight: bold;
-            text-shadow: 0 0 5px #ffa500;
         }
 
         .api-section {
-            background: #1c1f26;
+            background: #fff7f0;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 8px 25px rgba(255,46,99,0.3), 0 0 15px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             text-align: center;
         }
 
         button {
-            background: linear-gradient(135deg, #ff2e63, #ff6a00);
+            background: linear-gradient(135deg, #ff7f50, #ffb347);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -106,17 +102,17 @@
             font-size: 1.1em;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255,46,99,0.5);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         button:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(255,46,99,0.8);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
         .loading {
             display: none;
-            color: #ccc;
+            color: #555;
             font-style: italic;
         }
     </style>
@@ -124,32 +120,31 @@
 <body>
     <div class="container">
         <header>
-            <h1>🌙 Fúrias da Noite 🌙</h1>
-            <p class="subtitle">Explore os sabores que despertam a escuridão!</p>
+            <h1>🐉 Dragãozinho Shop 🐉</h1>
+            <p class="subtitle">Tudo fofo e mágico para seus estudos e aventuras!</p>
         </header>
 
         <div class="gelatos-grid" id="gelatosGrid">
-            <!-- Gelatos serão carregados aqui via JavaScript -->
+            <!-- Produtos serão carregados aqui via JavaScript -->
         </div>
 
         <div class="api-section">
-            <h2>🔄 Carregar Novos Sabores</h2>
-            <p>Clique no botão abaixo para despertar novos sabores sombrios!</p>
+            <h2>🔄 Descubra Novos Itens</h2>
+            <p>Clique no botão abaixo para carregar itens fofos da nossa loja!</p>
             <br>
-            <button onclick="carregarGelatos()">Carregar Gelatos</button>
-            <p class="loading" id="loading">Carregando delícias da noite...</p>
+            <button onclick="carregarGelatos()">Carregar Itens</button>
+            <p class="loading" id="loading">Carregando fofuras...</p>
         </div>
     </div>
 
     <script>
-        // Dados simulados da API
         const gelatosData = [
-            { id: 1, nome: "Gelato de Avelã Sombria", descricao: "Cremoso gelato com toque de mistério", preco: "R$ 12,90", icon: "🌰" },
-            { id: 2, nome: "Chocolate da Meia-Noite", descricao: "Intenso e profundo sabor de chocolate", preco: "R$ 14,90", icon: "🍫" },
-            { id: 3, nome: "Morango Lunar", descricao: "Gelato com morangos da escuridão da noite", preco: "R$ 11,90", icon: "🍓" },
-            { id: 4, nome: "Pistache Noturno", descricao: "Pistache que desperta os sentidos", preco: "R$ 16,90", icon: "🥜" },
-            { id: 5, nome: "Limão Crepúsculo", descricao: "Cítrico refrescante para noites intensas", preco: "R$ 10,90", icon: "🍋" },
-            { id: 6, nome: "Baunilha Sombria", descricao: "Baunilha que brilha na escuridão", preco: "R$ 13,90", icon: "🌸" }
+            { id: 1, nome: "Caderno de Dragãozinho", descricao: "Caderno super fofo com capas de dragão", preco: "R$ 19,90", icon: "📒" },
+            { id: 2, nome: "Estojo Flamejante", descricao: "Estojo com cores vibrantes e dragões", preco: "R$ 29,90", icon: "✏️" },
+            { id: 3, nome: "Caneta Voadora", descricao: "Caneta com glitter que parece voar", preco: "R$ 12,90", icon: "🖊️" },
+            { id: 4, nome: "Lápis de Escamas", descricao: "Lápis decorado com escamas de dragão", preco: "R$ 8,90", icon: "✏️" },
+            { id: 5, nome: "Mochila da Aventura", descricao: "Mochila para explorar a escola com estilo", preco: "R$ 59,90", icon: "🎒" },
+            { id: 6, nome: "Borrachinha Fofa", descricao: "Borracha mágica com formato de dragão", preco: "R$ 5,90", icon: "🟠" }
         ];
 
         function renderizarGelatos(gelatos) {
@@ -177,7 +172,7 @@
                 const gelatosEmbaralhados = [...gelatosData].sort(() => Math.random() - 0.5);
                 renderizarGelatos(gelatosEmbaralhados);
                 loading.style.display = 'none';
-            }, 1500);
+            }, 1000);
         }
 
         window.addEventListener('load', () => {
@@ -193,7 +188,7 @@
                 }
                 
                 @keyframes fadeInUp {
-                    from { opacity: 0; transform: translateY(30px); }
+                    from { opacity: 0; transform: translateY(20px); }
                     to { opacity: 1; transform: translateY(0); }
                 }
             `;
