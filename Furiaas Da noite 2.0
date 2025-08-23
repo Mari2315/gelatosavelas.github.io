@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fúrias da Noite Shop</title>
+<style>
+/* Reset e base */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Arial',sans-serif;background:#0b0c10;color:#e0e0e0;min-height:100vh;overflow-x:hidden;scroll-behavior:smooth;}
+a{text-decoration:none;color:inherit;}
+
+/* Header */
+header{position:fixed;width:100%;top:0;left:0;display:flex;justify-content:space-between;align-items:center;padding:20px 50px;background:rgba(31,34,43,0.95);backdrop-filter:blur(10px);box-shadow:0 0 15px rgba(160,196,255,0.3);z-index:1000;}
+header h1{font-size:2em;color:#f5f5f5;text-shadow:0 0 15px #a0c4ff;}
+nav a{margin-left:20px;font-weight:bold;cursor:pointer;transition:0.3s;}
+nav a:hover{color:#a0c4ff;}
+
+/* Fundo animado */
+#backgroundCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+
+/* Seções */
+section{padding:120px 50px 80px;display:none;position:relative;z-index:2;}
+section.active{display:block;animation:fadeIn 0.6s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* Landing Page Impactante */
+#home .landing-title{
+    display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;text-align:center;
+}
+#home .landing-title h2{
+    font-size:6vw;color:#f5f5f5;text-shadow:0 0 30px #a0c4ff;line-height:1.2;
+    margin-bottom:30px;
+}
+#home .landing-title button{
+    background:linear-gradient(135deg,#3a86ff,#8338ec);color:#fff;border:none;padding:20px 40px;border-radius:25px;cursor:pointer;transition:0.3s;box-shadow:0 4px 20px rgba(58,134,255,0.4);font-size:1.2em;
+}
+#home .landing-title button:hover{transform:scale(1.05);box-shadow:0 6px 25px rgba(58,134,255,0.6);}
+
+/* Carrossel */
+.carousel-container {
+    margin: 100px auto 50px;
+    width: 90%; /* largura ajustável */
+    max-width: 700px; /* limite mais realista */
+    height: 1000px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(160,196,255,0.5);
+    position: relative; /* necessário para setas */
+}
+.carousel-slide {
+    display: flex;
+    transition: transform 0.01s ease-in-out;
+}
+.carousel-slide img {
+    width: 100%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+
+/* Produtos */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;margin-top:30px;}
+.product-card{background:#1f222b;border-radius:15px;overflow:hidden;box-shadow:0 0 20px rgba(160,196,255,0.3);transition:transform 0.3s ease,box-shadow 0.3s ease;opacity:0;animation:fadeInUp 0.6s forwards;}
+.product-card:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 0 35px rgba(160,196,255,0.6);}
+.product-image{width:100%;height:200px;object-fit:cover;}
+.product-info{padding:20px;text-align:center;}
+.product-name{font-size:1.4em;font-weight:bold;margin-bottom:10px;color:#ffffff;}
+.product-description{font-size:1em;margin-bottom:15px;color:#cfd8dc;}
+.product-price{font-size:1.2em;font-weight:bold;color:#a0c4ff;}
+
+/* Perfil e Sobre */
+.profile-card, .about-section{background:#1f222b;padding:30px;border-radius:15px;box-shadow:0 0 20px rgba(160,196,255,0.3);margin-bottom:50px;}
+.profile-card h2,.about-section h2{color:#f5f5f5;margin-bottom:15px;}
+.profile-info p, .about-section p{color:#cfd8dc;margin-bottom:10px;line-height:1.6;}
+.history ul{list-style:none;}
+.history ul li{background:#292b35;padding:10px;margin-bottom:10px;border-radius:10px;box-shadow:0 0 10px rgba(160,196,255,0.2);}
+.team{display:flex;flex-wrap:wrap;justify-content:center;margin-top:20px;}
+.team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+.team-name {
+    font-size: 1.1em;
+    color: #a0c4ff;
+    margin-bottom: 8px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #292b35;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 15px;      /* distância da borda inferior */
+    right: 15px;       /* distância da borda direita */
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* garante que os pontos fiquem à direita */
+    width: auto !important;    /* força a largura mínima, evita centralização */
+    transform: none !important; /* remove qualquer translate residual */
+}
+.carousel-indicators span { 
+    width: 12px; 
+    height: 12px; 
+    background: rgba(255,255,255,0.6); 
+    border-radius: 50%; 
+    cursor: pointer; 
+    transition: background 0.3s ease; 
+} 
+
+.carousel-indicators span.active { 
+    background: #a0c4ff; 
+} 
+
+/* Footer */
+footer{background:#1f222b;text-align:center;padding:40px 20px;color:#cfd8dc;box-shadow:0 -5px 15px rgba(160,196,255,0.2);}
+footer .footer-content{display:flex;flex-wrap:wrap;justify-content:space-between;max-width:1200px;margin:0 auto;}
+footer .footer-section{margin:10px;}
+footer h3{margin-bottom:15px;color:#f5f5f5;}
+footer a{display:block;margin-bottom:8px;color:#a0c4ff;transition:0.3s;}
+footer a:hover{color:#fff;}
+footer .social-icons a{margin-right:15px;font-size:1.5em;transition:0.3s;color:#a0c4ff;}
+footer .social-icons a:hover{color:#fff;}
+
+/* Animations */
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0);}}
+
+/* Responsivo */
+@media (max-width: 900px) {
+    .landing-flex {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .carousel-container {
+        max-width: 100%;
+    }
+}
+</style>
+</head>
+<body>
+
+<canvas id="backgroundCanvas"></canvas>
+
+<header>
+<h1>Fúrias da Noite</h1>
+<nav>
+    <a onclick="showSection('home')">Home</a>
+    <a onclick="showSection('produtos')">Produtos</a>
+    <a onclick="showSection('perfil')">Perfil</a>
+    <a onclick="showSection('sobre')">Sobre</a>
+</nav>
+</header>
+
+<!-- Landing Page -->
+<section id="home" class="active">
+<div class="landing-title">
+    <h2>FÚRIAS DA NOITE</h2>
+    <button onclick="showSection('produtos')">Ver Produtos</button>
+</div>
+<!-- Carrossel -->
+<div class="carousel-container">
+    <div class="carousel-slide">
+        <img src="https://wallpaper.forfun.com/fetch/d5/d5dd3c2bad6c5ba5a6fa607acf89401f.jpeg?h=900&r=0.5&f=webp" alt="Dragão 1"> 
+        <img src="https://wallpaper.forfun.com/fetch/a7/a724139bc284a252d17d51214e8cbaf4.jpeg?h=900&r=0.5&f=webp" alt="Dragão 2"> 
+        <img src="https://wallpaper.forfun.com/fetch/57/57f85b22a5c721e5ccd95d668ad53e2e.jpeg?h=900&r=0.5&f=webp" alt="Dragão 3"> 
+        <img src="https://wallpaper.forfun.com/fetch/aa/aaa78552da259265e1d4603b4a26c77c.jpeg?h=600&r=0.5&f=webp" alt="Dragão 4">
+</div>
+<div class="carousel-indicators">
+  <span class="active"></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+
+</section>
+<!-- Produtos -->
+<section id="produtos">
+<h2>Produtos</h2>
+<div class="products-grid"></div>
+</section>
+
+<!-- Perfil -->
+<section id="perfil">
+<div class="profile-card">
+<h2>Maria Helena</h2>
+<div class="profile-info">
+    <p>Email: maria@noite.com</p>
+    <p>Data de cadastro: 01/01/2025</p>
+    <p>Status: Usuário Ativo</p>
+</div>
+<div class="history">
+    <h3>Histórico de Compras</h3>
+    <ul>
+        <li>Caderno Dragão Noturno - R$ 22,90</li>
+        <li>Estojo da Aventura - R$ 29,90</li>
+        <li>Mochila Veloz - R$ 59,90</li>
+    </ul>
+</div>
+</div>
+</section>
+
+<!-- Sobre -->
+<section id="sobre">
+<div class="about-section">
+<h2>Sobre Nós</h2>
+<p>A Fúrias da Noite Shop nasceu do amor por dragões e pela magia da imaginação. Nossa missão é trazer produtos escolares e itens fofos inspirados no mundo dos dragões para tornar cada dia mais especial e divertido.</p>
+<p>Com materiais de alta qualidade e designs exclusivos, queremos que nossos clientes vivam aventuras incríveis e colecionem momentos mágicos em cada compra.</p>
+
+<h2>Nossa Equipe</h2>
+<div class="team">
+    <div class="team-member">
+        <span class="team-name">Allan</span>
+        <img src="./assets/AllanDragao.png" alt="Dragao Allan">
+    </div>
+    <div class="team-member">
+        <span class="team-name">Maria</span>
+        <img src="./assets/MariaDragao.png" alt="Dragao Maria">
+    </div>
+    <div class="team-member">
+        <span class="team-name">Marcelo</span>
+        <img src="./assets/MarceloDragao.png" alt="Dragao Marcelo">
+    </div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<div class="footer-content">
+    <div class="footer-section">
+        <h3>Links</h3>
+        <a onclick="showSection('home')">Home</a>
+        <a onclick="showSection('produtos')">Produtos</a>
+        <a onclick="showSection('perfil')">Perfil</a>
+        <a onclick="showSection('sobre')">Sobre</a>
+    </div>
+    <div class="footer-section">
+        <h3>Contato</h3>
+        <p>Email: contato@furiasdanoite.com</p>
+        <p>Telefone: (11) 99999-9999</p>
+    </div>
+    <div class="footer-section">
+    <h3>Redes Sociais</h3>
+        <div class="social-icons">
+            <a href="#" target="_blank">FB</a>
+            <a href="#" target="_blank">IG</a>
+            <a href="#" target="_blank">TW</a>
+        </div>
+    </div>
+</div>
+<p style="margin-top:20px;">&copy; 2025 Fúrias da Noite Shop</p>
+</footer>
+
+<script>
+// Função de abas
+function showSection(id){
+    document.querySelectorAll('section').forEach(sec=>sec.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Dados dos produtos
+const produtosData = [
+    { id:1, nome:"Caderno Dragão Noturno", descricao:"Caderno com capa ilustrada de dragão", preco:"R$ 22,90", img:"https://down-br.img.susercontent.com/file/br-11134207-7qukw-lhxp6dvkwo4d6c" },
+    { id:2, nome:"Estojo da Aventura", descricao:"Estojo resistente com temática de dragão", preco:"R$ 29,90", img:"https://http2.mlstatic.com/D_NQ_NP_938452-MLB54502817353_032023-O-estojo-uma-repartico-infantil-desenho-de-drago-viking.webp" },
+    { id:3, nome:"Mochila Veloz", descricao:"Mochila com compartimentos mágicos e design de dragão", preco:"R$ 59,90", img:"https://ae-pic-a1.aliexpress-media.com/kf/S720100be31ac4dad808144b266a5cb64F.jpg_720x720q75.jpg_.avif" },
+    { id:4, nome:"Caneta Lunar", descricao:"Caneta tinteiro com dragão gravado", preco:"R$ 12,50", img:"https://m.media-amazon.com/images/I/51I7gwg-zTL._UF894,1000_QL80_.jpg" },
+    { id:5, nome:"Kit Adesivos Fúrias", descricao:"Conjunto de adesivos do furia da noite", preco:"R$ 9,90", img:"https://down-br.img.susercontent.com/file/1a0a620c3399eb7a8af9d7171f52e686" }
+];
+
+// Renderizar produtos
+const grid = document.querySelector('.products-grid');
+produtosData.forEach(prod => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+        <img class="product-image" src="${prod.img}" alt="${prod.nome}">
+        <div class="product-info">
+            <h3 class="product-name">${prod.nome}</h3>
+            <p class="product-description">${prod.descricao}</p>
+            <p class="product-price">${prod.preco}</p>
+        </div>
+    `;
+    grid.appendChild(card);
+});
+
+// Carrossel automático com indicadores
+const track = document.querySelector('.carousel-slide');
+const slides = Array.from(track.children);
+const indicators = document.querySelectorAll('.carousel-indicators span');
+let currentIndex = 0;
+
+function updateIndicators() {
+  indicators.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentIndex);
+  });
+}
+
+function moveSlide(index = null) {
+  if (index !== null) {
+    currentIndex = index;
+  } else {
+    currentIndex++;
+    if (currentIndex >= slides.length) currentIndex = 0;
+  }
+  track.style.transform = `translateX(-${currentIndex * 100}%)`;
+  updateIndicators();
+}
+
+let carouselInterval = setInterval(moveSlide, 3000);
+
+// Pausar no hover
+track.parentElement.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+track.parentElement.addEventListener('mouseleave', () => carouselInterval = setInterval(moveSlide, 3000));
+
+// Clique nas bolinhas
+indicators.forEach((dot, i) => {
+  dot.addEventListener('click', () => moveSlide(i));
+});
+
+// Fundo animado simples (estrelas)
+const canvas = document.getElementById('backgroundCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let stars = [];
+for(let i=0;i<150;i++){
+    stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.2,dy:(Math.random()-0.5)*0.2});
+}
+function animateStars(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle='#a0c4ff';
+        ctx.fill();
+        s.x += s.dx;
+        s.y += s.dy;
+        if(s.x<0||s.x>canvas.width)s.dx*=-1;
+        if(s.y<0||s.y>canvas.height)s.dy*=-1;
+    });
+    requestAnimationFrame(animateStars);
+}
+animateStars();
+
+window.addEventListener('resize',()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
